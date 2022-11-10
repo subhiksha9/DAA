@@ -1,0 +1,146 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct slist
+{
+    int data;
+    struct slist *next;
+};
+typedef struct slist node;
+node *create(node * first)
+{
+    node *new,*prev;
+    int x;
+    printf("enter a value(enter -1 to stop)\n");
+    scanf("%d",&x);
+    while(x!=-1)
+    {
+        new=(node *)malloc(sizeof(node));
+        new->data=x;
+        new->next=NULL;
+        if(first==NULL)
+        {
+            first=new;
+            prev=new;
+        }
+        else
+        {
+            prev->next=new;
+            prev=new;
+        }
+        printf("enter a value(enter -1 to stop)\n");
+        scanf("%d",&x);
+    }
+    return first;
+}
+void display(node *first)
+{
+    node *temp=first;
+    if(first==NULL)
+    {
+        printf("No list is found\n");
+    }
+    else
+    {
+        while(temp!=NULL)
+        {
+            printf("%d->",temp->data);
+            temp=temp->next;
+        }
+        printf("NULL\n");
+    }
+}
+node *sort(node *first)
+{
+    node *temp,*temp1;
+    int t;
+    for(temp=first;temp->next!=NULL;temp=temp->next)
+    {
+        for(temp1=temp->next;temp1!=NULL;temp1=temp1->next)
+        {
+            if(temp->data>temp1->data)
+            {
+                t=temp->data;
+                temp->data=temp1->data;
+                temp1->data=t;
+            }
+        }
+    }
+    return first;
+}
+node *addnode(node *l,node *new)
+{
+   if(l==NULL)
+   {
+      l=new;
+   }
+   else{
+      node *temp=l;
+      while(temp->next!=NULL)
+      {
+         temp=temp->next;
+      }
+      temp->next=new;
+   }
+   return l;
+}
+node *mergetwolists(node *list1,node *list2)
+{
+   node *new,*prev,*l3=NULL;
+   while(list1!=NULL && list2!=NULL){
+      new=(node *)malloc(sizeof(node));
+      prev=(node *)malloc(sizeof(node));
+      if(list1->data==list2->data){
+         new->data=list1->data;
+         new->next=NULL;
+         l3=addnode(l3,new);
+         prev->data=list2->data;
+         prev->next=NULL;
+         l3=addnode(l3,prev);
+         list1=list1->next;
+         list2=list2->next;         
+      }
+      else if(list1->data<list2->data){
+         new->data=list1->data;
+         new->next=NULL;
+         l3=addnode(l3,new);
+         list1=list1->next;
+      }
+      else{
+         new->data=list2->data;
+         new->next=NULL;
+         l3=addnode(l3,new);
+         list2=list2->next;
+      }
+   }
+   if(list1==NULL){
+      while(list2!=NULL){
+         new=(node *)malloc(sizeof(node));
+         new->data=list2->data;
+         new->next=NULL;
+         l3=addnode(l3,new);
+         list1=list1->next;
+      }
+   }
+   if(list2==NULL){
+      while(list1!=NULL){
+         new=(node *)malloc(sizeof(node));
+         new->data=list1->data;
+         new->next=NULL;
+         l3=addnode(l3,new);
+         list1=list1->next;
+      }
+   }
+   return l3;
+}
+void main()
+{
+   node *l1,*l2,*res;
+   l1=NULL;
+   l2=NULL;
+   l1=create(l1);
+   l2=create(l2);
+   sort(l1);
+   sort(l2);
+   res=mergetwolists(l1,l2);
+   display(res);
+}
